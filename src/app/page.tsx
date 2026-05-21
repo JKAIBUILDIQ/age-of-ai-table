@@ -3,12 +3,14 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { TourneyListItem } from "@/lib/types";
+import { getMockTournamentList } from "@/lib/mockData";
 
 const ARENA_API = process.env.NEXT_PUBLIC_ARENA_API_URL || "https://aiiq.world";
 
 export default function LobbyPage() {
   const [tournaments, setTournaments] = useState<TourneyListItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [usingMock, setUsingMock] = useState(false);
 
   useEffect(() => {
     fetchTournaments();
@@ -18,13 +20,21 @@ export default function LobbyPage() {
 
   async function fetchTournaments() {
     try {
-      const res = await fetch(`${ARENA_API}/api/aoa/tournament`);
+      const res = await fetch(`${ARENA_API}/api/aoa/tournament`, {
+        signal: AbortSignal.timeout(5000),
+      });
       if (res.ok) {
         const data = await res.json();
         setTournaments(data.tournaments || []);
+        setUsingMock(false);
+      } else {
+        throw new Error("not ok");
       }
     } catch {
-      // silently retry
+      if (tournaments.length === 0) {
+        setTournaments(getMockTournamentList());
+        setUsingMock(true);
+      }
     } finally {
       setLoading(false);
     }
@@ -83,6 +93,14 @@ export default function LobbyPage() {
             <p className="text-xs text-arena-muted uppercase">Completed</p>
           </div>
         </div>
+
+        {usingMock && (
+          <div className="mb-6 px-4 py-2 rounded-lg bg-amber-500/10 border border-amber-500/20 text-center">
+            <p className="text-xs text-amber-400/80">
+              Arena API unreachable — showing mock tournament data
+            </p>
+          </div>
+        )}
 
         {loading ? (
           <div className="text-center py-12">

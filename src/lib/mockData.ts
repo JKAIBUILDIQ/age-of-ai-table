@@ -182,6 +182,73 @@ export function getMockTournament(id: string): Tournament | undefined {
   return mockTournaments.find(t => t.id === id);
 }
 
+/**
+ * Returns mock data in the TourneyListItem format used by the arena API lobby.
+ * Allows the lobby page to render without a live arena connection.
+ */
+export function getMockTournamentList() {
+  return mockTournaments.map(t => ({
+    id: t.id,
+    name: t.name,
+    format: "blitz" as const,
+    status: t.status === "running" ? "running" as const
+      : t.status === "open" ? "registering" as const
+      : "completed" as const,
+    buyIn: t.entryFee,
+    maxPlayers: t.maxPlayers,
+    currentPlayers: t.currentPlayers,
+    prizePool: t.prizePool,
+    startedAt: t.startTime,
+    currentRound: t.currentRound,
+    tick: t.currentRound * 60,
+  }));
+}
+
+/**
+ * Returns mock tournament data in the full TourneyData format for the table view.
+ */
+export function getMockTourneyData(id: string) {
+  const t = getMockTournament(id);
+  if (!t) return null;
+  const standings = getMockStandings(id);
+  return {
+    id: t.id,
+    name: t.name,
+    format: "blitz" as const,
+    status: t.status === "running" ? "running" as const
+      : t.status === "open" ? "registering" as const
+      : "completed" as const,
+    buyIn: t.entryFee,
+    maxPlayers: t.maxPlayers,
+    currentPlayers: t.currentPlayers,
+    activePlayers: standings.filter(s => s.status === "active").length,
+    startingChips: 10000,
+    currentRound: t.currentRound,
+    tick: t.currentRound * 60,
+    price: t.asset === "BTC/USD" ? 107250 : 3420,
+    prizePool: t.prizePool,
+    prizeStructure: [
+      { place: 1, percent: 50, label: "1st" },
+      { place: 2, percent: 30, label: "2nd" },
+      { place: 3, percent: 20, label: "3rd" },
+    ],
+    rounds: [],
+    standings: standings.map(s => ({
+      rank: s.rank,
+      botId: s.botId,
+      botName: s.botName,
+      ownerName: s.owner,
+      chips: s.equity,
+      pnlPct: s.pnlPct,
+      trades: s.trades,
+      eliminated: s.status === "eliminated",
+    })),
+    startedAt: t.startTime,
+    timeElapsed: Date.now() - t.startTime,
+    timeRemaining: t.endTime ? t.endTime - Date.now() : 30 * 60_000,
+  };
+}
+
 export function getMockStandings(tournamentId?: string): BotStanding[] {
   // In a real implementation, standings would be per-tournament.
   // For mock purposes we return the same set with a tournament-based seed variation.

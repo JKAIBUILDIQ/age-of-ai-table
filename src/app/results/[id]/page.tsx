@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { TourneyData } from "@/lib/types";
+import { getMockTourneyData } from "@/lib/mockData";
 
 const ARENA_API = process.env.NEXT_PUBLIC_ARENA_API_URL || "https://aiiq.world";
 
@@ -15,13 +16,18 @@ export default function ResultsPage() {
   useEffect(() => {
     async function load() {
       try {
-        const res = await fetch(`${ARENA_API}/api/aoa/tournament/${tourneyId}`);
+        const res = await fetch(`${ARENA_API}/api/aoa/tournament/${tourneyId}`, {
+          signal: AbortSignal.timeout(5000),
+        });
         if (res.ok) {
           const data = await res.json();
           setTournament(data.tournament);
+        } else {
+          throw new Error("not ok");
         }
       } catch {
-        // retry handled by user
+        const mock = getMockTourneyData(tourneyId);
+        if (mock) setTournament(mock as TourneyData);
       }
     }
     load();

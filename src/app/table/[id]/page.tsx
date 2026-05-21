@@ -9,6 +9,7 @@ import { Standings } from "@/components/Standings";
 import { TournamentTimer } from "@/components/TournamentTimer";
 import { EliminationBanner } from "@/components/EliminationBanner";
 import { CrewChiefChat } from "@/components/CrewChiefChat";
+import { getMockTourneyData } from "@/lib/mockData";
 
 const ARENA_API = process.env.NEXT_PUBLIC_ARENA_API_URL || "https://aiiq.world";
 const POLL_INTERVAL = 5000;
@@ -24,15 +25,23 @@ export default function TablePage() {
 
   const fetchTournament = useCallback(async () => {
     try {
-      const res = await fetch(`${ARENA_API}/api/aoa/tournament/${tourneyId}`);
+      const res = await fetch(`${ARENA_API}/api/aoa/tournament/${tourneyId}`, {
+        signal: AbortSignal.timeout(5000),
+      });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
       setTournament(data.tournament);
       setError(null);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to fetch");
+      const mock = getMockTourneyData(tourneyId);
+      if (mock && !tournament) {
+        setTournament(mock as TourneyData);
+        setError(null);
+      } else if (!mock) {
+        setError(err instanceof Error ? err.message : "Failed to fetch");
+      }
     }
-  }, [tourneyId]);
+  }, [tourneyId, tournament]);
 
   useEffect(() => {
     fetchTournament();
