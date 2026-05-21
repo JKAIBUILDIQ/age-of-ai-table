@@ -68,8 +68,6 @@ export async function POST(req: NextRequest) {
     if (!claudeRes.ok) {
       const err = await claudeRes.text();
       console.error("Claude API error:", err);
-
-      // Fallback response when no API key or quota exceeded
       return NextResponse.json({
         advice: getFallbackAdvice(tournament, botId),
         directive_sent: false,

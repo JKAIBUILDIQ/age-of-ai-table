@@ -88,18 +88,18 @@ export function CrewChiefChat({
   };
 
   return (
-    <div className="bg-arena-card border border-arena-border rounded-lg flex flex-col h-[600px] lg:h-[calc(100vh-220px)]">
+    <div className="bg-[#12121a] border border-[#1e1e2e] rounded-lg flex flex-col h-[600px]">
       {/* Header */}
-      <div className="px-4 py-3 border-b border-arena-border flex items-center gap-3">
-        <div className="w-8 h-8 rounded-full bg-arena-accent/20 flex items-center justify-center">
-          <span className="text-arena-accent text-sm font-bold">CC</span>
+      <div className="px-4 py-3 border-b border-[#1e1e2e] flex items-center gap-3">
+        <div className="w-8 h-8 rounded-full bg-amber-500/20 flex items-center justify-center">
+          <span className="text-amber-500 text-sm font-bold">CC</span>
         </div>
         <div>
-          <h3 className="font-bold text-sm">Crew Chief</h3>
-          <p className="text-xs text-arena-muted">AI Strategy Advisor</p>
+          <h3 className="font-bold text-sm text-white">Crew Chief</h3>
+          <p className="text-xs text-gray-500">Tournament Strategist</p>
         </div>
         <div className="ml-auto">
-          <span className="w-2 h-2 bg-arena-green rounded-full inline-block animate-pulse" />
+          <span className="w-2 h-2 bg-green-500 rounded-full inline-block animate-pulse" />
         </div>
       </div>
 
@@ -107,15 +107,15 @@ export function CrewChiefChat({
       <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 space-y-4">
         {chatHistory.length === 0 && (
           <div className="text-center py-8">
-            <p className="text-arena-muted text-sm mb-4">
-              Your crew chief is ready. Ask about strategy, give directives, or discuss your position.
+            <p className="text-gray-500 text-sm mb-4">
+              Your crew chief is ready. Talk strategy, give directives, or ask about your position.
             </p>
             <div className="space-y-2">
-              {["Should I push?", "Play defensive", "What's the field doing?"].map((q) => (
+              {["Should I push?", "Play defensive", "Go all in"].map((q) => (
                 <button
                   key={q}
                   onClick={() => { setInput(q); }}
-                  className="block mx-auto text-xs bg-arena-bg border border-arena-border px-3 py-1.5 rounded hover:border-arena-accent transition"
+                  className="block mx-auto text-xs bg-[#0a0a0f] border border-[#1e1e2e] px-3 py-1.5 rounded text-gray-300 hover:border-amber-500 transition"
                 >
                   &ldquo;{q}&rdquo;
                 </button>
@@ -132,14 +132,14 @@ export function CrewChiefChat({
             <div
               className={`max-w-[85%] rounded-lg px-3 py-2 text-sm ${
                 msg.role === "user"
-                  ? "bg-arena-blue/20 text-white border border-arena-blue/30"
-                  : "bg-arena-bg border border-arena-border"
+                  ? "bg-blue-500/20 text-white border border-blue-500/30"
+                  : "bg-[#0a0a0f] border border-[#1e1e2e] text-gray-200"
               }`}
             >
               <p className="whitespace-pre-wrap">{msg.content}</p>
               {msg.directive && (
-                <div className="mt-2 pt-2 border-t border-arena-border">
-                  <span className="text-xs text-arena-accent font-mono">
+                <div className="mt-2 pt-2 border-t border-[#1e1e2e]">
+                  <span className="text-xs text-amber-500 font-mono">
                     ⚡ {msg.directiveSummary || `Directive: "${msg.directive}"`}
                   </span>
                 </div>
@@ -150,11 +150,11 @@ export function CrewChiefChat({
 
         {loading && (
           <div className="flex justify-start">
-            <div className="bg-arena-bg border border-arena-border rounded-lg px-3 py-2">
+            <div className="bg-[#0a0a0f] border border-[#1e1e2e] rounded-lg px-3 py-2">
               <div className="flex gap-1">
-                <span className="w-1.5 h-1.5 bg-arena-muted rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
-                <span className="w-1.5 h-1.5 bg-arena-muted rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
-                <span className="w-1.5 h-1.5 bg-arena-muted rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
+                <span className="w-1.5 h-1.5 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
+                <span className="w-1.5 h-1.5 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
+                <span className="w-1.5 h-1.5 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
               </div>
             </div>
           </div>
@@ -162,7 +162,7 @@ export function CrewChiefChat({
       </div>
 
       {/* Input */}
-      <div className="p-3 border-t border-arena-border">
+      <div className="p-3 border-t border-[#1e1e2e]">
         <div className="flex gap-2">
           <input
             type="text"
@@ -170,19 +170,19 @@ export function CrewChiefChat({
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="Talk to your crew chief..."
-            className="flex-1 bg-arena-bg border border-arena-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-arena-accent transition placeholder:text-arena-muted"
+            className="flex-1 bg-[#0a0a0f] border border-[#1e1e2e] rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500 transition placeholder:text-gray-600"
             disabled={loading}
           />
           <button
             onClick={sendMessage}
             disabled={loading || !input.trim()}
-            className="px-4 py-2 bg-arena-accent text-black font-bold rounded-lg text-sm hover:bg-arena-accent/80 transition disabled:opacity-30 disabled:cursor-not-allowed"
+            className="px-4 py-2 bg-amber-500 text-black font-bold rounded-lg text-sm hover:bg-amber-400 transition disabled:opacity-30 disabled:cursor-not-allowed"
           >
             Send
           </button>
         </div>
-        <p className="text-xs text-arena-muted mt-1.5 px-1">
-          Try: &ldquo;go aggressive&rdquo; • &ldquo;play safe&rdquo; • &ldquo;scalp mode&rdquo; • &ldquo;should I push?&rdquo;
+        <p className="text-xs text-gray-600 mt-1.5 px-1">
+          Try: &ldquo;go aggressive&rdquo; • &ldquo;play safe&rdquo; • &ldquo;all in&rdquo; • &ldquo;should I push?&rdquo;
         </p>
       </div>
     </div>

@@ -10,7 +10,11 @@ export interface TourneyStanding {
   pnlPct: number;
   trades: number;
   eliminated: boolean;
+  archetype?: string;
   directive?: string;
+  position?: string;
+  aggressionLevel?: number;
+  riskMultiplier?: number;
 }
 
 export interface TourneyData {
@@ -36,6 +40,9 @@ export interface TourneyData {
   completedAt?: number;
   timeElapsed: number;
   timeRemaining: number;
+  roundPhase?: "trading" | "break" | "eliminating";
+  bustOuts?: { botId: string; botName: string; round: number; finalChips: number; cause: string }[];
+  eventLog?: { time: number; message: string }[];
 }
 
 export interface TourneyListItem {

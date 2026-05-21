@@ -33,17 +33,6 @@ export async function getTournament(id: string): Promise<TourneyData> {
   return data.tournament;
 }
 
-export async function registerBot(
-  tourneyId: string,
-  botId: string,
-  ownerName: string
-): Promise<{ success: boolean; message: string }> {
-  return apiFetch(`/api/aoa/tournament/${tourneyId}`, {
-    method: "POST",
-    body: JSON.stringify({ action: "register", botId, ownerName }),
-  });
-}
-
 export async function sendDirective(
   tourneyId: string,
   botId: string,
@@ -54,28 +43,4 @@ export async function sendDirective(
     method: "POST",
     body: JSON.stringify({ botId, ownerId, directive }),
   });
-}
-
-export async function startTournament(
-  tourneyId: string
-): Promise<{ success: boolean }> {
-  return apiFetch(`/api/aoa/tournament/${tourneyId}`, {
-    method: "POST",
-    body: JSON.stringify({ action: "start" }),
-  });
-}
-
-export async function getOraclePrice(): Promise<{
-  price: number;
-  timestamp: number;
-  source: string;
-}> {
-  try {
-    const data = await apiFetch<{
-      btc: { price: number; timestamp: number; source: string };
-    }>("/api/aoa/oracle/price");
-    return data.btc;
-  } catch {
-    return { price: 0, timestamp: Date.now(), source: "unavailable" };
-  }
 }
